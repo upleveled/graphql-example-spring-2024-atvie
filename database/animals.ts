@@ -3,6 +3,64 @@ import { postgresToGraphql } from '../graphql/transform';
 import { Animal } from '../migrations/00000-createTableAnimals';
 import { sql } from './connect';
 
+export const createAnimal = cache(
+  async (sessionToken: string, newAnimal: Omit<Animal, 'id'>) => {
+    const [animal] = await sql<Animal[]>`
+      INSERT INTO
+        animals (first_name, type, accessory) (
+          SELECT
+            ${newAnimal.firstName},
+            ${newAnimal.type},
+            ${newAnimal.accessory}
+          FROM
+            sessions
+          WHERE
+            token = ${sessionToken}
+            AND sessions.expiry_timestamp > now()
+        )
+      RETURNING
+        animals.*
+    `;
+
+    return postgresToGraphql(animal);
+  },
+);
+
+export const updateAnimal = cache(
+  async (sessionToken: string, updatedAnimal: Animal) => {
+    const [animal] = await sql<Animal[]>`
+      UPDATE animals
+      SET
+        first_name = ${updatedAnimal.firstName},
+        type = ${updatedAnimal.type},
+        accessory = ${updatedAnimal.accessory}
+      FROM
+        sessions
+      WHERE
+        sessions.token = ${sessionToken}
+        AND sessions.expiry_timestamp > now()
+        AND animals.id = ${updatedAnimal.id}
+      RETURNING
+        animals.*
+    `;
+    return postgresToGraphql(animal);
+  },
+);
+
+export const deleteAnimal = cache(async (sessionToken: string, id: number) => {
+  const [animal] = await sql<Animal[]>`
+    DELETE FROM animals USING sessions
+    WHERE
+      sessions.token = ${sessionToken}
+      AND sessions.expiry_timestamp > now()
+      AND animals.id = ${id}
+    RETURNING
+      animals.*
+  `;
+
+  return postgresToGraphql(animal);
+});
+
 export const getAnimalsInsecure = cache(async () => {
   const animals = await sql<Animal[]>`
     SELECT
@@ -24,83 +82,3 @@ export const getAnimalInsecure = cache(async (id: number) => {
   `;
   return postgresToGraphql(animal);
 });
-
-export const createAnimal = cache(async (newAnimal: Omit<Animal, 'id'>) => {
-  // FIXME: Remove this early return when proper session token validation is implemented (see FIXME in query below)
-  // if (
-  //   insecureSessionToken !==
-  //   'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
-  // ) {
-  //   return null;
-  // }
-
-  const [animal] = await sql<Animal[]>`
-    INSERT INTO
-      animals (first_name, type, accessory)
-      -- FIXME: Implement proper session token validation with INNER JOIN on sessions table
-    VALUES
-      (
-        ${newAnimal.firstName},
-        ${newAnimal.type},
-        ${newAnimal.accessory}
-      )
-    RETURNING
-      animals.*
-  `;
-
-  return postgresToGraphql(animal);
-});
-
-export const updateAnimal = cache(
-  async (
-    // FIXME: Rename insecureSessionToken to sessionToken everywhere
-    // insecureSessionToken: string,
-    updatedAnimal: Animal,
-  ) => {
-    // FIXME: Remove this early return when proper session token validation is implemented (see FIXME in query below)
-    // if (
-    //   insecureSessionToken !==
-    //   'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
-    // ) {
-    //   return null;
-    // }
-
-    const [animal] = await sql<Animal[]>`
-      UPDATE animals
-      SET
-        first_name = ${updatedAnimal.firstName},
-        type = ${updatedAnimal.type},
-        accessory = ${updatedAnimal.accessory}
-        -- FIXME: Implement proper session token validation with INNER JOIN on sessions table
-      WHERE
-        id = ${updatedAnimal.id}
-      RETURNING
-        animals.*
-    `;
-
-    return postgresToGraphql(animal);
-  },
-);
-
-export const deleteAnimal = cache(
-  // FIXME: Rename insecureSessionToken to sessionToken everywhere
-  async (animalId: number) => {
-    // FIXME: Remove this early return when proper session token validation is implemented (see FIXME in query below)
-    // if (
-    //   insecureSessionToken !==
-    //   'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
-    // ) {
-    //   return null;
-    // }
-
-    const [animal] = await sql<Animal[]>`
-      DELETE FROM animals
-      -- FIXME: Implement proper session token validation with INNER JOIN on sessions table
-      WHERE
-        id = ${animalId}
-      RETURNING
-        animals.*
-    `;
-    return postgresToGraphql(animal);
-  },
-);

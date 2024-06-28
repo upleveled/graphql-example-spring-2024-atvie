@@ -1,14 +1,19 @@
 'use server';
 
 import { cookies } from 'next/headers';
+import { deleteSession } from '../../../database/sessions';
 
 export async function logout() {
-  // FIXME: Create secure session token and rename insecureSessionTokenCookie to sessionToken everywhere
-  const insecureSessionTokenCookie = cookies().get('sessionToken');
+  // Task: Implement the user logout workflow
 
-  if (!insecureSessionTokenCookie) return undefined;
-  // FIXME: Delete the session from the database
+  // 1. Get the session token from the cookie
+  const cookieStore = cookies();
 
-  // Delete the session cookie from the browser
-  await cookies().set('sessionToken', '', { maxAge: -1 });
+  const session = cookieStore.get('sessionToken');
+
+  // 2. Delete the session from the database based on the token
+  if (session) await deleteSession(session.value);
+
+  // 3. Delete the session cookie from the browser
+  cookieStore.delete('sessionToken');
 }

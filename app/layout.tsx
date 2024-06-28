@@ -19,12 +19,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // FIXME: Create secure session token and rename insecureSessionTokenCookie to sessionToken everywhere
-  const insecureSessionTokenCookie = cookies().get('sessionToken');
+  // Task: Protect the dashboard page and redirect to login if the user is not logged in
 
-  const user =
-    insecureSessionTokenCookie &&
-    (await getUser(insecureSessionTokenCookie.value));
+  // 1. Checking if the sessionToken cookie exists
+  const sessionCookie = cookies().get('sessionToken');
+
+  // 2. Get the current logged in user from the database using the sessionToken value
+  const user = sessionCookie && (await getUser(sessionCookie.value));
 
   return (
     <html lang="en">
@@ -38,7 +39,14 @@ export default async function RootLayout({
           </div>
 
           <div>{user?.username}</div>
-          {user?.username ? <LogoutButton /> : <Link href="/login">Login</Link>}
+          {user?.username ? (
+            <LogoutButton />
+          ) : (
+            <>
+              <Link href="/register">Register</Link>
+              <Link href="/login">Login</Link>
+            </>
+          )}
         </nav>
         <ApolloClientProvider>
           <main>{children}</main>

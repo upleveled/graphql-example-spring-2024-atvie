@@ -5,12 +5,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import ErrorMessage from '../../ErrorMessage';
-import { PostgresToGraphql } from '../../graphql/transform';
 import { Note } from '../../migrations/00004-createTableNotes';
 import styles from './NotesForm.module.scss';
 
 type Props = {
-  notes: PostgresToGraphql<Note>[];
+  notes: Note[];
   username: string;
 };
 

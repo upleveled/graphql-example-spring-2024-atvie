@@ -1,17 +1,9 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import React from 'react';
 import { getValidSession } from '../../../database/sessions';
-import { getSafeReturnToPath } from '../../../util/validation';
-import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
 
-type Props = {
-  searchParams: {
-    returnTo?: string | string[];
-  };
-};
-
-export default async function LoginPage({ searchParams }: Props) {
+export default async function RegisterPage() {
   // Task: Add redirect to home if user is logged in
 
   // 1. Checking if the sessionToken cookie exists
@@ -22,9 +14,9 @@ export default async function LoginPage({ searchParams }: Props) {
 
   // 3. If the sessionToken cookie is valid, redirect to home
   if (session) {
-    redirect(getSafeReturnToPath(searchParams.returnTo) || '/');
+    redirect('/');
   }
 
   // 4. If the sessionToken cookie is invalid or doesn't exist, show the login form
-  return <LoginForm returnTo={searchParams.returnTo} />;
+  return <RegisterForm />;
 }
