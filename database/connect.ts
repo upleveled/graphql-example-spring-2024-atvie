@@ -1,5 +1,5 @@
 import 'server-only';
-import postgres from 'postgres';
+import postgres, { Sql } from 'postgres';
 import { postgresConfig, setEnvironmentVariables } from '../util/config';
 
 // This loads all environment variables from a .env file
@@ -8,13 +8,13 @@ setEnvironmentVariables();
 
 // Type needed for the connection function below
 declare module globalThis {
-  let postgresSqlClient: ReturnType<typeof postgres> | undefined;
+  let postgresSqlClient: Sql;
 }
 
 // Connect only once to the database
 // https://github.com/vercel/next.js/issues/7811#issuecomment-715259370
 function connectOneTimeToDatabase() {
-  if (!globalThis.postgresSqlClient) {
+  if (!('postgresSqlClient' in globalThis)) {
     globalThis.postgresSqlClient = postgres(postgresConfig);
   }
   return globalThis.postgresSqlClient;
