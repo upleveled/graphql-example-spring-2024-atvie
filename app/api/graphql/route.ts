@@ -180,7 +180,7 @@ const resolvers: Resolvers = {
         throw new GraphQLError('Sessions creation failed');
       }
 
-      cookies().set({
+      (await cookies()).set({
         name: 'sessionToken',
         value: session.token,
         httpOnly: true,
@@ -235,7 +235,7 @@ const resolvers: Resolvers = {
         throw new GraphQLError('Sessions creation failed');
       }
 
-      cookies().set({
+      (await cookies()).set({
         name: 'sessionToken',
         value: session.token,
         httpOnly: true,

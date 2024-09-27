@@ -3,21 +3,24 @@ import Link from 'next/link';
 import { getNote } from '../../../database/notes';
 
 type Props = {
-  params: {
+  params: Promise<{
     noteId: string;
-  };
+  }>;
 };
 
 export default async function NotePage(props: Props) {
   // Task: Restrict access to the note page only to the user who created the note
 
   // 1. Checking if the sessionToken cookie exists
-  const sessionTokenCookie = cookies().get('sessionToken');
+  const sessionTokenCookie = (await cookies()).get('sessionToken');
 
   // 2. Query the note with the session token and noteId
   const note =
     sessionTokenCookie &&
-    (await getNote(sessionTokenCookie.value, Number(props.params.noteId)));
+    (await getNote(
+      sessionTokenCookie.value,
+      Number((await props.params).noteId),
+    ));
 
   // 3. If there is no note for the current user, show restricted access message
   if (!note) {

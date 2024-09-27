@@ -8,7 +8,7 @@ export default async function NotesPage() {
   // Task: Restrict access to the notes page and only display notes belonging to the current logged in user
 
   // 1. Checking if the sessionToken cookie exists
-  const sessionTokenCookie = cookies().get('sessionToken');
+  const sessionTokenCookie = (await cookies()).get('sessionToken');
 
   // 2. Query user with the sessionToken
   const user = sessionTokenCookie && (await getUser(sessionTokenCookie.value));

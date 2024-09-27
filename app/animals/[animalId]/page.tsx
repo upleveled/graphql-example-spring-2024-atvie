@@ -3,11 +3,11 @@ import Link from 'next/link';
 import { getAnimalInsecure } from '../../../database/animals';
 
 type Props = {
-  params: { animalId: string };
+  params: Promise<{ animalId: string }>;
 };
 
 export default async function AnimalPage(props: Props) {
-  const animal = await getAnimalInsecure(Number(props.params.animalId));
+  const animal = await getAnimalInsecure(Number((await props.params).animalId));
 
   if (!animal) {
     return (
