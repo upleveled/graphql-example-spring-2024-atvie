@@ -75,25 +75,28 @@ export default function AnimalsForm() {
     setAccessory('');
   }
 
-  const { data, refetch } = useSuspenseQuery<{ animals: Animal[] }>(animals);
+  const { data } = useSuspenseQuery<{ animals: Animal[] }>(animals);
 
-  const [createAnimal] = useMutation(createAnimalMutation, {
-    variables: {
-      firstName,
-      type,
-      accessory,
-    },
+  const [createAnimal] = useMutation<Promise<void | string>>(
+    createAnimalMutation,
+    {
+      variables: {
+        firstName,
+        type,
+        accessory,
+      },
 
-    onError: (apolloError) => {
-      setErrorMessage(apolloError.message);
-    },
+      onError: (apolloError) => {
+        setErrorMessage(apolloError.message);
+      },
 
-    onCompleted: async () => {
-      resetFormStates();
-      setErrorMessage('');
-      await refetch();
+      onCompleted: () => {
+        resetFormStates();
+        setErrorMessage('');
+      },
+      refetchQueries: ['Animals'],
     },
-  });
+  );
 
   const [updateAnimal] = useMutation(updateAnimalMutation, {
     variables: {
@@ -107,11 +110,11 @@ export default function AnimalsForm() {
       setErrorMessage(apolloError.message);
     },
 
-    onCompleted: async () => {
+    onCompleted: () => {
       resetFormStates();
       setErrorMessage('');
-      await refetch();
     },
+    refetchQueries: ['Animals'],
   });
 
   const [deleteAnimal] = useMutation(deleteAnimalMutation, {
@@ -119,10 +122,10 @@ export default function AnimalsForm() {
       setErrorMessage(apolloError.message);
     },
 
-    onCompleted: async () => {
+    onCompleted: () => {
       setErrorMessage('');
-      await refetch();
     },
+    refetchQueries: ['Animals'],
   });
 
   return (
