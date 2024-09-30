@@ -89,7 +89,7 @@ const resolvers: Resolvers = {
   },
 
   Mutation: {
-    createAnimal: async (parent, args, context: Context) => {
+    createAnimal: async (parent, args, context) => {
       if (!context.sessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
       }
@@ -117,7 +117,7 @@ const resolvers: Resolvers = {
       return animal;
     },
 
-    updateAnimal: async (parent, args, context: Context) => {
+    updateAnimal: async (parent, args, context) => {
       if (!context.sessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
       }
@@ -140,7 +140,7 @@ const resolvers: Resolvers = {
       });
     },
 
-    deleteAnimal: async (parent, args, context: Context) => {
+    deleteAnimal: async (parent, args, context) => {
       if (!context.sessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
       }
@@ -255,7 +255,7 @@ const resolvers: Resolvers = {
       return null;
     },
 
-    createNote: async (parent, args, context: Context) => {
+    createNote: async (parent, args, context) => {
       if (!context.sessionTokenCookie) {
         throw new GraphQLError('You must be logged in to create a note');
       }
