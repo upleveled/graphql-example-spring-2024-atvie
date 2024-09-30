@@ -23,6 +23,10 @@ import {
 } from '../../../database/users';
 import { Animal, Resolvers } from '../../../graphql/graphqlGeneratedTypes';
 
+export type Context = {
+  sessionTokenCookie?: { value: string };
+};
+
 export type GraphqlResponseBody =
   | {
       animal: Animal;
@@ -85,7 +89,7 @@ const resolvers: Resolvers = {
   },
 
   Mutation: {
-    createAnimal: async (parent, args, context) => {
+    createAnimal: async (parent, args, context: Context) => {
       if (!context.sessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
       }
@@ -113,7 +117,7 @@ const resolvers: Resolvers = {
       return animal;
     },
 
-    updateAnimal: async (parent, args, context) => {
+    updateAnimal: async (parent, args, context: Context) => {
       if (!context.sessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
       }
@@ -136,11 +140,14 @@ const resolvers: Resolvers = {
       });
     },
 
-    deleteAnimal: async (parent, args, context) => {
+    deleteAnimal: async (parent, args, context: Context) => {
       if (!context.sessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
       }
-      return await deleteAnimal(context.sessionTokenCookie.value, Number(args.id));
+      return await deleteAnimal(
+        context.sessionTokenCookie.value,
+        Number(args.id),
+      );
     },
 
     register: async (parent, args) => {
@@ -248,7 +255,7 @@ const resolvers: Resolvers = {
       return null;
     },
 
-    createNote: async (parent, args, context) => {
+    createNote: async (parent, args, context: Context) => {
       if (!context.sessionTokenCookie) {
         throw new GraphQLError('You must be logged in to create a note');
       }
