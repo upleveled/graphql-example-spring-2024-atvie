@@ -100,7 +100,7 @@ const resolvers: Resolvers = {
         throw new GraphQLError('Required field missing');
       }
 
-      const animal = await createAnimal(context.sessionTokenCookie, {
+      const animal = await createAnimal(context.sessionTokenCookie.value, {
         accessory: args.accessory || null,
         firstName: args.firstName,
         type: args.type,
@@ -128,7 +128,7 @@ const resolvers: Resolvers = {
         throw new GraphQLError('Required field missing');
       }
 
-      return await updateAnimal(context.sessionTokenCookie, {
+      return await updateAnimal(context.sessionTokenCookie.value, {
         id: Number(args.id),
         firstName: args.firstName,
         type: args.type,
@@ -140,7 +140,7 @@ const resolvers: Resolvers = {
       if (!context.sessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
       }
-      return await deleteAnimal(context.sessionTokenCookie, Number(args.id));
+      return await deleteAnimal(context.sessionTokenCookie.value, Number(args.id));
     },
 
     register: async (parent, args) => {
