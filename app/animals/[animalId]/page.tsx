@@ -3,7 +3,9 @@ import Link from 'next/link';
 import { getAnimalInsecure } from '../../../database/animals';
 
 type Props = {
-  params: Promise<{ animalId: string }>;
+  params: Promise<{
+    animalId: string;
+  }>;
 };
 
 export default async function AnimalPage(props: Props) {
