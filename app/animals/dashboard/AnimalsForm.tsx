@@ -77,26 +77,23 @@ export default function AnimalsForm() {
 
   const { data } = useSuspenseQuery<{ animals: Animal[] }>(animals);
 
-  const [createAnimal] = useMutation<Promise<void | string>>(
-    createAnimalMutation,
-    {
-      variables: {
-        firstName,
-        type,
-        accessory,
-      },
-
-      onError: (apolloError) => {
-        setErrorMessage(apolloError.message);
-      },
-
-      onCompleted: () => {
-        resetFormStates();
-        setErrorMessage('');
-      },
-      refetchQueries: ['Animals'],
+  const [createAnimal] = useMutation(createAnimalMutation, {
+    variables: {
+      firstName,
+      type,
+      accessory,
     },
-  );
+
+    onError: (apolloError) => {
+      setErrorMessage(apolloError.message);
+    },
+
+    onCompleted: () => {
+      resetFormStates();
+      setErrorMessage('');
+    },
+    refetchQueries: ['Animals'],
+  });
 
   const [updateAnimal] = useMutation(updateAnimalMutation, {
     variables: {
