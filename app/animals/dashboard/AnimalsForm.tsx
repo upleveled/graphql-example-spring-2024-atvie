@@ -92,6 +92,8 @@ export default function AnimalsForm() {
       resetFormStates();
       setErrorMessage('');
     },
+
+    refetchQueries: ['animals'],
   });
 
   const [updateAnimal] = useMutation(updateAnimalMutation, {
@@ -110,6 +112,8 @@ export default function AnimalsForm() {
       resetFormStates();
       setErrorMessage('');
     },
+
+    refetchQueries: ['animals'],
   });
 
   const [deleteAnimal] = useMutation(deleteAnimalMutation, {
@@ -120,6 +124,8 @@ export default function AnimalsForm() {
     onCompleted: () => {
       setErrorMessage('');
     },
+
+    refetchQueries: ['animals'],
   });
 
   return (
