@@ -22,7 +22,7 @@ export default async function RootLayout({
   // Task: Protect the dashboard page and redirect to login if the user is not logged in
 
   // 1. Checking if the sessionToken cookie exists
-  const sessionCookie = cookies().get('sessionToken');
+  const sessionCookie = (await cookies()).get('sessionToken');
 
   // 2. Get the current logged in user from the database using the sessionToken value
   const user = sessionCookie && (await getUser(sessionCookie.value));

@@ -8,5 +8,9 @@ const codegenConfig: CodegenConfig = {
       plugins: ['typescript', 'typescript-resolvers'],
     },
   },
+
+  config: {
+    contextType: '../app/api/graphql/route#Context',
+  },
 };
 export default codegenConfig;

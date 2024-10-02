@@ -23,6 +23,10 @@ import {
 } from '../../../database/users';
 import { Animal, Resolvers } from '../../../graphql/graphqlGeneratedTypes';
 
+export type Context = {
+  sessionTokenCookie?: { value: string };
+};
+
 export type GraphqlResponseBody =
   | {
       animal: Animal;
@@ -140,7 +144,10 @@ const resolvers: Resolvers = {
       if (!context.sessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
       }
-      return await deleteAnimal(context.sessionTokenCookie.value, Number(args.id));
+      return await deleteAnimal(
+        context.sessionTokenCookie.value,
+        Number(args.id),
+      );
     },
 
     register: async (parent, args) => {
@@ -180,7 +187,7 @@ const resolvers: Resolvers = {
         throw new GraphQLError('Sessions creation failed');
       }
 
-      cookies().set({
+      (await cookies()).set({
         name: 'sessionToken',
         value: session.token,
         httpOnly: true,
@@ -235,7 +242,7 @@ const resolvers: Resolvers = {
         throw new GraphQLError('Sessions creation failed');
       }
 
-      cookies().set({
+      (await cookies()).set({
         name: 'sessionToken',
         value: session.token,
         httpOnly: true,
