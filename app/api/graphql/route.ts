@@ -21,7 +21,7 @@ import {
   getUserInsecure,
   getUserWithPasswordHashInsecure,
 } from '../../../database/users';
-import { Animal, Resolvers } from '../../../graphql/graphqlGeneratedTypes';
+import type { Animal, Resolvers } from '../../../graphql/graphqlGeneratedTypes';
 
 export type Context = {
   sessionTokenCookie?: { value: string };
