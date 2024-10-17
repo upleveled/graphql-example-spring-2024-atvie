@@ -17,5 +17,6 @@
     "**/*.cjs",
     "**/*.mjs",
     ".next/types/**/*.ts"
-  ]
+  ],
+  "exclude": ["graphql/graphqlGeneratedTypes"]
 }
