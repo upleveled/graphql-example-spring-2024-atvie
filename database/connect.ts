@@ -1,5 +1,5 @@
 import 'server-only';
-import postgres, { Sql } from 'postgres';
+import postgres, { type Sql } from 'postgres';
 import { postgresConfig, setEnvironmentVariables } from '../util/config';
 
 // This loads all environment variables from a .env file
@@ -7,7 +7,7 @@ import { postgresConfig, setEnvironmentVariables } from '../util/config';
 setEnvironmentVariables();
 
 // Type needed for the connection function below
-declare module globalThis {
+declare namespace globalThis {
   let postgresSqlClient: Sql;
 }
 

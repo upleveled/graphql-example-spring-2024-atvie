@@ -3,7 +3,7 @@
 import { gql, useMutation, useSuspenseQuery } from '@apollo/client';
 import { useState } from 'react';
 import ErrorMessage from '../../../ErrorMessage';
-import { Animal } from '../../../migrations/00000-createTableAnimals';
+import type { Animal } from '../../../migrations/00000-createTableAnimals';
 import styles from './AnimalsForm.module.scss';
 
 const createAnimalMutation = gql`
