@@ -1,6 +1,6 @@
 import { cache } from 'react';
 import { postgresToGraphql } from '../graphql/transform';
-import { Animal } from '../migrations/00000-createTableAnimals';
+import type { Animal } from '../migrations/00000-createTableAnimals';
 import { sql } from './connect';
 
 export const createAnimal = cache(

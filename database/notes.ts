@@ -1,6 +1,6 @@
 import { cache } from 'react';
 import { postgresToGraphql } from '../graphql/transform';
-import { Note } from '../migrations/00004-createTableNotes';
+import type { Note } from '../migrations/00004-createTableNotes';
 import { sql } from './connect';
 
 export const getNotes = cache(async (sessionToken: string) => {

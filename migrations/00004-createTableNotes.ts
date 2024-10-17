@@ -1,4 +1,4 @@
-import { Sql } from 'postgres';
+import type { Sql } from 'postgres';
 
 export type Note = {
   id: number;
@@ -12,8 +12,8 @@ export async function up(sql: Sql) {
     CREATE TABLE notes (
       id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
       title varchar(100) NOT NULL,
-      text_content TEXT NOT NULL,
-      user_id integer NOT NULL REFERENCES users (id) ON DELETE CASCADE
+      text_content text NOT NULL,
+      user_id integer NOT NULL REFERENCES users (id) ON DELETE cascade
     );
   `;
 }
